@@ -33,9 +33,9 @@ print("Pipeline Start")
 ####################################
 args = config.general_settings()
 ### Dataset parameters
-args.N_E = 1000
-args.N_CV = 100
-args.N_T = 200
+args.N_E = 1000 # ephocs
+args.N_CV = 100 # cross validation iteration
+args.N_T = 200 # size of training set?
 offset = 0 ### Init condition of dataset
 args.randomInit_train = True
 args.randomInit_cv = True
