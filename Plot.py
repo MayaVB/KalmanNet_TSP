@@ -339,33 +339,51 @@ class Plot_RTS(Plot_KF):
         plt.grid(True)
         plt.savefig(fileName)  
 
-    def plotTraj_CA(self,test_target, RTS_out, rtsnet_out, dim, file_name):
+    def plotTraj_CA(self,test_target, RTS_out, rtsnet_out, dim, file_name, use_cude=False):
         legend = ["RTSNet", "Ground Truth", "MB RTS"]
         font_size = 14
         T_test = rtsnet_out[0].size()[1]
         x_plt = range(0, T_test)
         if dim==0:#position
-            plt.plot(x_plt, rtsnet_out[0][0,:].detach().numpy(), label=legend[0])
-            plt.plot(x_plt, test_target[0][0,:].detach().numpy(), label=legend[1])
-            plt.plot(x_plt, RTS_out[0][0,:], label=legend[2])
+            if use_cude:
+                plt.plot(x_plt, rtsnet_out[0][0,:].cpu().detach().numpy(), label=legend[0])
+                plt.plot(x_plt, test_target[0][0,:].cpu().detach().numpy(), label=legend[1])
+                plt.plot(x_plt, RTS_out[0][0,:].cpu(), label=legend[2])
+            else:
+                plt.plot(x_plt, rtsnet_out[0][0,:].detach().numpy(), label=legend[0])
+                plt.plot(x_plt, test_target[0][0,:].detach().numpy(), label=legend[1])
+                plt.plot(x_plt, RTS_out[0][0,:], label=legend[2])               
+                
             plt.legend(fontsize=font_size)
             plt.xlabel('t', fontsize=font_size)
             plt.ylabel('position', fontsize=font_size)
             plt.savefig(file_name) 
             plt.clf()
         elif dim==1:#velocity
-            plt.plot(x_plt, rtsnet_out[0][1,:].detach().numpy(), label=legend[0])
-            plt.plot(x_plt, test_target[0][1,:].detach().numpy(), label=legend[1])
-            plt.plot(x_plt, RTS_out[0][1,:], label=legend[2])
+            if use_cude:    
+                plt.plot(x_plt, rtsnet_out[0][1,:].cpu().detach().numpy(), label=legend[0])
+                plt.plot(x_plt, test_target[0][1,:].cpu().detach().numpy(), label=legend[1])
+                plt.plot(x_plt, RTS_out[0][1,:].cpu(), label=legend[2])
+            else:
+                plt.plot(x_plt, rtsnet_out[0][1,:].detach().numpy(), label=legend[0])
+                plt.plot(x_plt, test_target[0][1,:].detach().numpy(), label=legend[1])
+                plt.plot(x_plt, RTS_out[0][1,:], label=legend[2])               
+                
             plt.legend(fontsize=font_size)
             plt.xlabel('t', fontsize=font_size)
             plt.ylabel('velocity', fontsize=font_size)
             plt.savefig(file_name)
             plt.clf()
         elif dim==2:#acceleration
-            plt.plot(x_plt, rtsnet_out[0][2,:].detach().numpy(), label=legend[0])
-            plt.plot(x_plt, test_target[0][2,:].detach().numpy(), label=legend[1])
-            plt.plot(x_plt, RTS_out[0][2,:], label=legend[2])
+            if use_cude:  
+                plt.plot(x_plt, rtsnet_out[0][2,:].cpu().detach().numpy(), label=legend[0])
+                plt.plot(x_plt, test_target[0][2,:].cpu().detach().numpy(), label=legend[1])
+                plt.plot(x_plt, RTS_out[0][2,:].cpu(), label=legend[2])
+            else:
+                plt.plot(x_plt, rtsnet_out[0][2,:].detach().numpy(), label=legend[0])
+                plt.plot(x_plt, test_target[0][2,:].detach().numpy(), label=legend[1])
+                plt.plot(x_plt, RTS_out[0][2,:], label=legend[2])
+                                
             plt.legend(fontsize=font_size)
             plt.xlabel('t', fontsize=font_size)
             plt.ylabel('acceleration', fontsize=font_size)

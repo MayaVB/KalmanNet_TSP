@@ -33,7 +33,7 @@ print("Pipeline Start")
 ####################################
 args = config.general_settings()
 ### Dataset parameters
-args.N_E = 1000 # ephocs
+args.N_E = 100 # ephocs
 args.N_CV = 100 # cross validation iteration
 args.N_T = 200 # size of training set?
 offset = 0 ### Init condition of dataset
@@ -179,6 +179,6 @@ PlotfileName2 = "TrainPVA_acceleration.png"
 
 Plot = Plot(PlotfolderName, PlotfileName0)
 print("Plot")
-Plot.plotTraj_CA(test_target, KF_out, KNet_out, dim=0, file_name=PlotfolderName+PlotfileName0)#Position
-Plot.plotTraj_CA(test_target, KF_out, KNet_out, dim=1, file_name=PlotfolderName+PlotfileName1)#Velocity
-Plot.plotTraj_CA(test_target, KF_out, KNet_out, dim=2, file_name=PlotfolderName+PlotfileName2)#Acceleration
+Plot.plotTraj_CA(test_target, KF_out, KNet_out, dim=0, file_name=PlotfolderName+PlotfileName0, use_cuda=args.use_cuda) #Position
+Plot.plotTraj_CA(test_target, KF_out, KNet_out, dim=1, file_name=PlotfolderName+PlotfileName1, use_cuda=args.use_cuda) #Velocity
+Plot.plotTraj_CA(test_target, KF_out, KNet_out, dim=2, file_name=PlotfolderName+PlotfileName2, use_cuda=args.use_cuda) #Acceleration

@@ -13,6 +13,7 @@ from Filters.KalmanFilter_test import KFTest
 from KNet.KalmanNet_nn import KalmanNetNN
 
 from Pipelines.Pipeline_EKF import Pipeline_EKF 
+from Plot import Plot_extended as Plot
 
 print("Pipeline Start")
 
@@ -33,9 +34,9 @@ path_results = 'KNet/'
 args = config.general_settings()
 
 ### dataset parameters ##################################################
-args.N_E = 1000
-args.N_CV = 100
-args.N_T = 200
+args.N_E = 50 # ephocs 1000
+args.N_CV = 100 # cross validation iteration
+args.N_T = 200 # size of training set?
 # init condition
 args.randomInit_train = False
 args.randomInit_cv = False
@@ -49,8 +50,8 @@ else:
    # deterministic initial condition
    m2_0 = 0 * torch.eye(m) 
 # sequence length
-args.T = 100
-args.T_test = 100
+args.T = 100 # time steps in train
+args.T_test = 100 # time steps in test
 args.randomLength = False
 if args.randomLength:# you can modify T_max and T_min 
    args.T_max = 1000
@@ -104,7 +105,7 @@ print("Start Data Gen")
 DataGen(args, sys_model, dataFolderName + dataFileName)
 print("Data Load")
 if args.randomLength:
-   [train_input, train_target, cv_input, cv_target, test_input, test_target,train_init, cv_init, test_init, train_lengthMask,cv_lengthMask,test_lengthMask] = torch.load(dataFolderName + dataFileName, map_location=device)
+   [train_input, train_target, cv_input, cv_target, test_input, test_target, train_init, cv_init, test_init, train_lengthMask,cv_lengthMask,test_lengthMask] = torch.load(dataFolderName + dataFileName, map_location=device)
 else:
    [train_input, train_target, cv_input, cv_target, test_input, test_target,_,_,_] = torch.load(dataFolderName + dataFileName, map_location=device)
 
@@ -173,3 +174,13 @@ else:
       [MSE_cv_linear_epoch, MSE_cv_dB_epoch, MSE_train_linear_epoch, MSE_train_dB_epoch] = KalmanNet_Pipeline.NNTrain(sys_model, cv_input, cv_target, train_input, train_target, path_results)
       [MSE_test_linear_arr, MSE_test_linear_avg, MSE_test_dB_avg,knet_out,RunTime] = KalmanNet_Pipeline.NNTest(sys_model, test_input, test_target, path_results)
 KalmanNet_Pipeline.save()
+
+####################
+### Plot results ###
+####################
+PlotfolderName = "Figures/Linear_canonical/"
+PlotfileName0 = "TrainPVA_position.png"
+
+Plot = Plot(PlotfolderName, PlotfileName0)
+print("Plot")
+Plot.plotTraj_CA(test_target, KF_out, knet_out, dim=0, file_name=PlotfolderName+PlotfileName0)#Position
